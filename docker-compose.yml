@@ -1,0 +1,36 @@
+x-postgres-variables: &postgres-variables
+#  POSTGRES_DB: "${DB__NAME}"
+#  POSTGRES_USER: "${DB__USER}"
+#  POSTGRES_PASSWORD: "${DB__PASSWORD}"
+  POSTGRES_DB: "postgres"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "postgres"
+
+
+services:
+  web:
+    container_name: fastapi-template-web
+    build: .
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - infra/envs/.env
+    depends_on:
+      - db
+
+  db:
+    container_name: fastapi-template-db
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      <<: *postgres-variables
+    ports:
+      - "5432:5432"
+    healthcheck:
+      interval: 10s
+      retries: 10
+      test: "pg_isready -U postgres -d postgres"
+      timeout: 2s
