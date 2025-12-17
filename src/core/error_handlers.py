@@ -1,9 +1,13 @@
+import logging
+
 from fastapi import Request, HTTPException, status
 from fastapi.exceptions import RequestValidationError
+
 from .responses import error_response
 
 
 async def general_exception_handler(request: Request, e: Exception):
+    logging.getLogger(__name__).exception("Unhandled server error")
     return error_response(
         code="INTERNAL_SERVER_ERROR",
         message=str(e) or "An unexpected error occurred",
