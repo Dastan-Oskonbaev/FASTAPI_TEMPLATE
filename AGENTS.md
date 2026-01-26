@@ -6,7 +6,7 @@
 - Feature modules live under `src/<feature>/` (e.g., `src/auth/`, `src/profile/`, `src/company/`) and typically include:
   - `router.py` (FastAPI routes), `service.py` (business logic), `models.py` (SQLAlchemy), `schemas.py` (Pydantic).
 - `src/database/`: SQLAlchemy base/repository; Alembic lives in `src/database/alembic/` (migrations: `src/database/alembic/versions/`).
-- `infra/`: environment and deployment files (`infra/envs/`, swarm stacks in `infra/swarm/`).
+- `infra/`: Docker and CI files (`infra/Dockerfile`, `infra/.gitlab-ci.yml`).
 - `FastAPITemplate.postman_collection.json`: example API requests for local testing.
 
 ## Build, Test, and Development Commands
@@ -37,5 +37,5 @@
 - Update the Postman collection when API contracts change.
 
 ## Configuration & Security Tips
-- Do not commit secrets. Local config is loaded from `infra/envs/.env` (ignored by Git).
+- Do not commit secrets. Local config is loaded from `.env` (ignored by Git).
 - For Docker Compose, `DATABASE_URL` should use the service hostname `db` (example in `README.md`).

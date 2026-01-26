@@ -1,4 +1,5 @@
-from typing import List, Any, Dict, Union
+from typing import Any, Dict, List, Union
+
 from pydantic import BaseModel
 
 
@@ -23,8 +24,4 @@ class ErrorDetails(BaseModel):
 
 class ErrorResponse(BaseModel):
     status: str = "error"
-    error: dict = {
-        "code": str,
-        "message": str,
-        "details": ErrorDetails | None
-    }
+    error: dict = {"code": str, "message": str, "details": ErrorDetails | None}

@@ -54,12 +54,7 @@ class BaseRepository(AbstractRepository):
         return res.scalar_one_or_none()
 
     async def update_one(self, model_id: int, data: Dict[str, Any]):
-        stmt = (
-            update(self.model)
-            .where(self.model.id == model_id)
-            .values(**data)
-            .returning(self.model)
-        )
+        stmt = update(self.model).where(self.model.id == model_id).values(**data).returning(self.model)
         res = await self.session.execute(stmt)
         await self.session.commit()
         return res.scalar_one_or_none()

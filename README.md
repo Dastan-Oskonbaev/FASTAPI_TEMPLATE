@@ -8,6 +8,7 @@ This is a FastAPI template project designed to quickly set up a new FastAPI-base
 - **SQLAlchemy ORM**: Object-relational mapping for interacting with the database.
 - **Example Models**: Predefined models for common use cases.
 - **Example Postman Collections**: Predefined collections for current template.
+- **Structured Logging**: JSON logs + request UUID propagation via headers.
 
 # Requirements
 - Python 3.12
@@ -16,7 +17,7 @@ This is a FastAPI template project designed to quickly set up a new FastAPI-base
 
 # Clone the repository
 ```bash
-git clone git@gitlab.mdigital.kg:backend-global/fastapi-template.git
+git clone git@gitlab.kg:backend-global/fastapi-template.git
 ```
 
 # Navigate to the project directory
@@ -26,7 +27,7 @@ cd fastapi-template
 
 # Set environment variables
 ```bash
-touch ./infra/envs/.env
+cp env_example .env
 ```
 
 Open file and add as basic configuration
@@ -44,6 +45,27 @@ docker compose up -d
 To run the linter check, use the following command:
 ```bash
 ruff check .
+```
+
+# Logging
+HTTP requests are logged as JSON lines and include request correlation IDs.
+
+Headers (propagated in both directions):
+- `X-Request-UUID` (per request, generated if missing)
+- `X-Server-UUID` (per server, generated if missing; can be disabled)
+
+Env vars:
+- `SERVICE_NAME` (e.g. `WEB`, `SCHEDULER`, `WORKER`)
+- `ENABLE_REQUEST_UUID`, `ENABLE_SERVER_UUID`
+- `REQUEST_UUID_HEADER`, `SERVER_UUID_HEADER`
+- `UUID_SERVER`, `GENERATE_UUID_SERVER`
+- `LOG_REQUEST_BODY`, `LOG_REQUEST_BODY_MAX_BYTES`
+
+# Background
+Run ARQ worker and scheduler:
+```bash
+SERVICE_NAME=WORKER poetry run arq src.background.worker.WorkerSettings
+SERVICE_NAME=SCHEDULER poetry run arq src.background.scheduler.SchedulerWorkerSettings
 ```
 
 # Postman Collection

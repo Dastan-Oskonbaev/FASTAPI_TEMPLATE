@@ -3,6 +3,7 @@ from __future__ import annotations
 from enum import Enum
 from pathlib import Path
 from typing import List
+
 from pydantic import AnyHttpUrl, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -14,6 +15,7 @@ class AppEnvironment(str, Enum):
     PRODUCTION = "production"
     DEV = "development"
     TESTING = "testing"
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -37,9 +39,22 @@ class Settings(BaseSettings):
 
     APP_VERSION: str = "1"
     LOGGING_LEVEL: str = "INFO"
+    SERVICE_NAME: str = "WEB"
     API_V1_STR: str = "/api/v1"
     WS_PREFIX: str = "/ws"
 
+    ENABLE_REQUEST_UUID: bool = True
+    ENABLE_SERVER_UUID: bool = True
+    REQUEST_UUID_HEADER: str = "X-Request-UUID"
+    SERVER_UUID_HEADER: str = "X-Server-UUID"
+    UUID_SERVER: str | None = None
+    GENERATE_UUID_SERVER: bool = True
+
+    LOG_REQUEST_BODY: bool = True
+    LOG_REQUEST_BODY_MAX_BYTES: int = 10_000
+
+    WORKER_METRICS_PORT: int = 9100
+    SCHEDULER_METRICS_PORT: int = 9101
 
     def is_dev(self) -> bool:
         return self.FASTAPI_ENV == AppEnvironment.DEV

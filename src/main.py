@@ -1,24 +1,14 @@
-import logging
-
-import sentry_sdk
-from fastapi import Request, HTTPException, status
+from fastapi import HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+
 from src.core.config import settings
 from src.core.error_handlers import general_exception_handler, http_exception_handler, validation_exception_handler
+from src.core.logging_config import configure_logging
 from src.core.setup_app import create_app
 
-logging.basicConfig(
-    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s", level=logging.DEBUG
-)
+configure_logging(logging_level=settings.LOGGING_LEVEL, service_name=settings.SERVICE_NAME)
 app = create_app()
-
-
-if bool(settings.ENABLE_SENTRY) and settings.SENTRY_DSN:
-    sentry_sdk.init(
-        dsn=settings.SENTRY_DSN,
-        traces_sample_rate=0.1,
-    )
 
 
 @app.get("/healthcheck", include_in_schema=False)
